@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>星球 AR 展示</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #planetText {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 4px black;
+      z-index: 2;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="planetText"></div>
+
+  <a-scene
+    mindar-image="imageTargetSrc: targets.mind; autoStart: true; uiScanning: true"
+    color-space="sRGB"
+    renderer="colorManagement: true; physicallyCorrectLights: true"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+  >
+
+    <a-assets>
+      <video id="土星影" src="土星影.mp4" preload="auto" loop muted playsinline></video>
+      <video id="天王星影" src="天王星影.mp4" preload="auto" loop muted playsinline></video>
+      <video id="木星影" src="木星影.mp4" preload="auto" loop muted playsinline></video>
+      <video id="水星影" src="水星影.mp4" preload="auto" loop muted playsinline></video>
+      <video id="火星影" src="火星影.mp4" preload="auto" loop muted playsinline></video>
+      <video id="地球影" src="地球影.mp4" preload="auto" loop muted playsinline></video>
+      <video id="金星影" src="金星影.mp4" preload="auto" loop muted playsinline></video>
+      <video id="海王星影" src="海王星影.mp4" preload="auto" loop muted playsinline></video>
+    </a-assets>
+
+    <a-light type="ambient" intensity="1.5"></a-light>
+    <a-camera look-controls="enabled: false"></a-camera>
+
+    <!-- targetIndex 根據順序：土、天、木、水、火、地、金、海 -->
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-video id="video-土星" src="#土星影" width="1.2" height="0.7" position="0 0 0" material="shader: flat"></a-video>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 1">
+      <a-video id="video-天王星" src="#天王星影" width="1.2" height="0.7" position="0 0 0" material="shader: flat"></a-video>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 2">
+      <a-video id="video-木星" src="#木星影" width="1.2" height="0.7" position="0 0 0" material="shader: flat"></a-video>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 3">
+      <a-video id="video-水星" src="#水星影" width="1" height="0.6" position="0 0 0" material="shader: flat"></a-video>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 4">
+      <a-video id="video-火星" src="#火星影" width="1" height="0.6" position="0 0 0" material="shader: flat"></a-video>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 5">
+      <a-video id="video-地球" src="#地球影" width="1" height="0.6" position="0 0 0" material="shader: flat"></a-video>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 6">
+      <a-video id="video-金星" src="#金星影" width="1" height="0.6" position="0 0 0" material="shader: flat"></a-video>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 7">
+      <a-video id="video-海王星" src="#海王星影" width="1.2" height="0.7" position="0 0 0" material="shader: flat"></a-video>
+    </a-entity>
+
+  </a-scene>
+
+  <script>
+    const planetDescriptions = {
+      "水星": "☿ 水星（Mercury）\n水星是離太陽最近的行星，也是最小的一顆。表面類似月球，幾乎沒有大氣層，日夜溫差極大。",
+      "金星": "♀ 金星（Venus）\n金星與地球大小接近，但表面溫度極高，有濃厚的二氧化碳大氣與硫酸雲。",
+      "地球": "🌍 地球（Earth）\n地球是目前唯一已知擁有生命的星球，有穩定大氣、水與一顆衛星——月球。",
+      "火星": "♂ 火星（Mars）\n火星又稱紅色星球，有奧林帕斯山與乾涸的河道，大氣極薄，以二氧化碳為主。",
+      "木星": "♃ 木星（Jupiter）\n太陽系最大行星，著名特徵是大紅斑，有超過 90 顆衛星。",
+      "土星": "♄ 土星（Saturn）\n以壯觀的光環聞名，由冰與岩石構成，是密度最小的行星。",
+      "天王星": "♅ 天王星（Uranus）\n冰巨星，自轉軸幾乎橫躺，有淡藍色外觀與暗淡環系。",
+      "海王星": "♆ 海王星（Neptune）\n深藍色冰巨星，風速為太陽系最快，有著名風暴「大黑斑」。"
+    };
+
+    const planetText = document.getElementById("planetText");
+    const planets = ["土星", "天王星", "木星", "水星", "火星", "地球", "金星", "海王星"];
+
+    planets.forEach((name, index) => {
+      const video = document.getElementById(`${name}影`);
+      const videoEntity = document.getElementById(`video-${name}`);
+      const target = document.querySelectorAll("a-entity[mindar-image-target]")[index];
+
+      target.addEventListener("targetFound", () => {
+        video.play();
+        planetText.innerText = planetDescriptions[name];
+        planetText.style.display = "block";
+      });
+
+      target.addEventListener("targetLost", () => {
+        video.pause();
+        video.currentTime = 0;
+        planetText.style.display = "none";
+      });
+    });
+  </script>
+</body>
+</html>
